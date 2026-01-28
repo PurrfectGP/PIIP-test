@@ -67,6 +67,38 @@ class FelixEngine:
         self.client = genai.Client(api_key=api_key)
         self.model = DEFAULT_MODEL
 
+    @staticmethod
+    def _parse_json(text: str) -> dict[str, Any] | None:
+        """Try to parse JSON from Gemini output, with cleanup for common issues."""
+        # Strip markdown code fences
+        cleaned = text.strip()
+        if cleaned.startswith("```"):
+            cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+            cleaned = re.sub(r"\s*```$", "", cleaned)
+
+        # Attempt 1: parse as-is
+        try:
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            pass
+
+        # Attempt 2: fix trailing commas (e.g. {a: 1,} )
+        fixed = re.sub(r",\s*([}\]])", r"\1", cleaned)
+        try:
+            return json.loads(fixed)
+        except json.JSONDecodeError:
+            pass
+
+        # Attempt 3: extract the first { ... } block
+        match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+        if match:
+            try:
+                return json.loads(match.group())
+            except json.JSONDecodeError:
+                pass
+
+        return None
+
     async def analyze(self, answers: list[dict[str, str]]) -> dict[str, Any]:
         """
         Run Felix analysis on user answers.
@@ -90,13 +122,30 @@ class FelixEngine:
         )
 
         raw_text = response.text.strip()
+        result = self._parse_json(raw_text)
 
-        # Strip markdown code fences if the model wraps its output
-        if raw_text.startswith("```"):
-            raw_text = re.sub(r"^```(?:json)?\s*", "", raw_text)
-            raw_text = re.sub(r"\s*```$", "", raw_text)
+        # If first attempt fails, retry once with a stricter prompt
+        if result is None:
+            retry_prompt = (
+                "Your previous response contained invalid JSON. "
+                "Please return ONLY the corrected, valid JSON with no extra text:\n\n"
+                + raw_text
+            )
+            retry_resp = self.client.models.generate_content(
+                model=self.model,
+                contents=retry_prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.1,
+                    max_output_tokens=4096,
+                ),
+            )
+            result = self._parse_json(retry_resp.text.strip())
 
-        result = json.loads(raw_text)
+        if result is None:
+            raise ValueError(
+                "Felix returned invalid JSON that could not be repaired. "
+                "Try again or use fewer questions."
+            )
 
         # Assimilate any new traits into the library
         new_defs = result.get("new_trait_definitions", {})

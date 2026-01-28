@@ -190,6 +190,34 @@ function App() {
               Choose how many questions from each block. Questions will be randomised.
             </p>
 
+            {/* Same-for-all shortcut */}
+            <div className="flex items-center justify-between bg-purple-900/30 border border-purple-700/50 rounded-lg px-4 py-3 mb-4">
+              <span className="text-sm font-semibold text-purple-200">
+                Same for all blocks
+              </span>
+              <select
+                value=""
+                onChange={(e) => {
+                  const n = Number(e.target.value);
+                  setCounts((prev) =>
+                    prev.map((_, i) =>
+                      Math.min(n, allBlockQuestions[i]?.length || 0)
+                    )
+                  );
+                }}
+                className="bg-gray-700 border border-purple-600 text-gray-200 text-sm rounded px-2 py-1 focus:outline-none focus:border-purple-400"
+              >
+                <option value="" disabled>
+                  Pick...
+                </option>
+                {Array.from({ length: 9 }, (_, n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="space-y-3">
               {allBlockNames.map((name, i) => {
                 const maxQ = allBlockQuestions[i]?.length || 0;
