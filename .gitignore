@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+backend/.env
+
+# Build (keep dist in git for Railway fallback)
+# frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp

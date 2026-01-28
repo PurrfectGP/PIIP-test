@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "version": "2.1",
+    "description": "Poly-Sin Weighting Library"
+  },
+  "traits": {
+    "status_signaling": {
+      "definition": "The overt display of resources to establish hierarchy.",
+      "sin_weights": { "pride": 0.8, "greed": 0.1, "envy": 0.1 },
+      "complexity_score": 0.3
+    },
+    "lust_for_power": {
+      "definition": "Seeking control over others to satisfy ego (Pride) and dominance desires (Lust).",
+      "sin_weights": { "pride": 0.5, "lust": 0.4, "wrath": 0.1 },
+      "complexity_score": 0.8
+    },
+    "comfort_hoarding": {
+      "definition": "Prioritizing personal comfort and routine over growth or helping others.",
+      "sin_weights": { "sloth": 0.6, "gluttony": 0.2, "greed": 0.2 },
+      "complexity_score": 0.4
+    },
+    "righteous_anger": {
+      "definition": "Anger expressed when perceiving injustice, fueled by moral superiority.",
+      "sin_weights": { "wrath": 0.5, "pride": 0.4, "envy": 0.1 },
+      "complexity_score": 0.6
+    },
+    "social_comparison": {
+      "definition": "Measuring self-worth by comparing achievements and possessions to others.",
+      "sin_weights": { "envy": 0.6, "pride": 0.3, "greed": 0.1 },
+      "complexity_score": 0.5
+    },
+    "people_pleasing": {
+      "definition": "Compulsive desire to be liked, sacrificing authenticity for approval.",
+      "sin_weights": { "pride": 0.4, "lust": 0.3, "sloth": 0.3 },
+      "complexity_score": 0.7
+    }
+  }
+}
