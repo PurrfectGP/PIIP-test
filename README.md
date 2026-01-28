@@ -80,9 +80,8 @@ PIIP-test/
 │   └── vite.config.ts             # Build configuration
 ├── felix_questions.json           # All 28 questions (6 blocks)
 ├── Instructions.md                # Original spec document
-├── Procfile                       # Railway start command
-├── railway.toml                   # Railway deployment config
-├── nixpacks.toml                  # Railway build steps
+├── Dockerfile                     # Build instructions for Render
+├── render.yaml                    # Render blueprint config
 └── README.md                      # This file
 ```
 
@@ -296,61 +295,76 @@ python -m uvicorn main:app --host 0.0.0.0 --port 8000
 
 ---
 
-## Deploying to Railway
+## Deploying to Render
 
-Railway is a cloud platform that hosts your app on the internet. Here's how to deploy Felix.
+Render is a cloud platform that hosts your app on the internet. Here's how to deploy Felix step by step.
 
-### Step 1: Create a Railway Account
+### Step 1: Create a Render Account
 
-1. Go to [railway.app](https://railway.app)
-2. Sign up with GitHub (recommended — makes deployment easier)
+1. Open your browser and go to **https://render.com**
+2. Click **"Get Started for Free"** (top right)
+3. Choose **"Sign up with GitHub"** — this is the easiest option because Render can then see your repositories automatically
+4. Authorize Render to access your GitHub when prompted
+5. You now have a Render account — no credit card needed for the free tier
 
-### Step 2: Connect Your Repository
+### Step 2: Create a New Web Service
 
-1. In Railway dashboard, click **"New Project"**
-2. Select **"Deploy from GitHub Repo"**
-3. Find and select your `PIIP-test` repository
-4. Railway will detect the project and start building
+1. Once logged in, you'll see the **Render Dashboard**
+2. Click the **"New +"** button (top right of the dashboard)
+3. Select **"Web Service"** from the dropdown menu
+4. You'll see two options — choose **"Build and deploy from a Git repository"** and click **Next**
+5. You'll see a list of your GitHub repos. Find **`PIIP-test`** and click **"Connect"** next to it
+   - If you don't see it, click **"Configure account"** to grant Render access to the repo
 
-### Step 3: Add Your API Key
+### Step 3: Configure the Service Settings
 
-This is the most important step. Railway needs your Gemini key as a secret environment variable.
+After connecting, Render shows a settings form. Fill it in exactly like this:
 
-1. In your Railway project, click on the **service** (the box that appeared)
-2. Go to the **"Variables"** tab
-3. Click **"+ New Variable"**
-4. Add:
-   - **Name:** `GEMINI_API_KEY`
-   - **Value:** Your API key (paste the `AIza...` string)
-5. (Optional) Add another variable:
-   - **Name:** `GEMINI_MODEL`
-   - **Value:** `gemini-2.5-pro-preview-05-06` (or `gemini-2.0-flash` for cheaper/faster)
+| Setting | What to enter |
+|---------|--------------|
+| **Name** | `felix-poly-sin-lab` (or whatever you want — this becomes part of your URL) |
+| **Region** | Pick the one closest to you (e.g., `Oregon (US West)`) |
+| **Branch** | `main` (or whichever branch has the latest code) |
+| **Runtime** | Select **"Docker"** — Render will detect the `Dockerfile` in the repo |
+| **Instance Type** | Select **"Free"** (for testing) or **"Starter $7/mo"** (for always-on) |
 
-### Step 4: Set the Port (Usually Automatic)
+**Do NOT click "Create Web Service" yet** — you need to add your API key first (Step 4).
 
-Railway sets `PORT` automatically. The app reads it via `${PORT:-8000}`. You should not need to change anything, but if the deploy fails, add:
-- **Name:** `PORT`
-- **Value:** `8000`
+### Step 4: Add Your Gemini API Key (Environment Variables)
 
-### Step 5: Deploy
+This is the most important step. Without this, Felix can't talk to Gemini.
 
-Railway auto-deploys when you push to GitHub. To trigger manually:
-1. Go to the **"Deployments"** tab
-2. Click **"Deploy"** or push a new commit
+1. Scroll down on the same page to the **"Environment Variables"** section
+2. Click **"Add Environment Variable"**
+3. Add your first variable:
+   - **Key:** `GEMINI_API_KEY`
+   - **Value:** Paste your API key (the `AIza...` string from Google AI Studio — see "Getting Your Own Google Gemini API Key" section above)
+4. Click **"Add Environment Variable"** again to add a second one:
+   - **Key:** `GEMINI_MODEL`
+   - **Value:** `gemini-2.5-pro-preview-05-06`
+
+That's it. You should now have **2 environment variables** listed.
+
+### Step 5: Create the Service
+
+1. Click **"Create Web Service"** (the big button at the bottom)
+2. Render will start building your app — you'll see a log with build progress
+3. The build takes 2-4 minutes (it installs Node.js, builds the frontend, then installs Python and backend dependencies)
+4. When you see **"==> Your service is live"** in the logs, it's done
 
 ### Step 6: Get Your URL
 
-Once deployed (green checkmark):
-1. Go to **"Settings"** tab
-2. Under **"Networking"** → **"Public Networking"**
-3. Click **"Generate Domain"**
-4. You'll get a URL like `felix-lab-production.up.railway.app`
+1. At the top of your service page, you'll see a URL like:
+   ```
+   https://felix-poly-sin-lab.onrender.com
+   ```
+2. Click it — that's your live app. Share this URL with anyone.
 
-That's your live app. Share the URL with anyone.
+**Note about the free tier:** Free Render services "spin down" after 15 minutes of no traffic. The first visit after it spins down takes about 30-60 seconds to wake up. After that it's fast. The Starter plan ($7/mo) keeps it always on.
 
-### Updating After Deployment
+### Step 7: Updating After Deployment
 
-Just push to GitHub. Railway auto-redeploys.
+Every time you push to GitHub, Render automatically rebuilds and redeploys:
 
 ```bash
 git add .
@@ -358,11 +372,19 @@ git commit -m "Updated questions"
 git push
 ```
 
-### Railway Costs
+You can also trigger a manual deploy from the Render dashboard:
+1. Go to your service page
+2. Click **"Manual Deploy"** (top right)
+3. Select **"Deploy latest commit"**
 
-- **Free trial:** $5 credit (enough for testing)
-- **Hobby plan:** $5/month for always-on apps
-- The app uses minimal resources (one small Python server)
+### Render Costs
+
+| Plan | Cost | Behaviour |
+|------|------|-----------|
+| **Free** | $0 | Spins down after 15 min idle. Wakes up on first request (~30-60s). 750 hours/month. |
+| **Starter** | $7/month | Always on, no spin-down. Best for production. |
+
+The app uses minimal resources (one small Docker container running Python).
 
 ---
 
@@ -375,11 +397,11 @@ The app is built to be **model-agnostic**. It uses the Google GenAI SDK which su
 
 ### When Gemini 3 Pro Comes Out
 
-When Google releases Gemini 3 Pro, just change the environment variable on Railway:
+When Google releases Gemini 3 Pro, just change the environment variable on Render:
 
-1. Go to your Railway project → Variables
+1. Go to your Render dashboard → click your service → **Environment**
 2. Change `GEMINI_MODEL` to the new model ID (e.g., `gemini-3.0-pro` — check Google's docs for the exact name)
-3. Railway will auto-redeploy
+3. Click **Save Changes** — Render will auto-redeploy
 
 No code changes needed. The system sends text prompts and parses JSON responses — this works the same across all Gemini models.
 
@@ -389,11 +411,11 @@ No code changes needed. The system sends text prompts and parses JSON responses 
 
 | Problem | Solution |
 |---------|----------|
-| "GEMINI_API_KEY environment variable is not set" | Create `.env` file in `backend/` with your key, or set it in Railway Variables |
+| "GEMINI_API_KEY environment variable is not set" | Create `.env` file in `backend/` with your key (local), or add it in Render → Environment (deployed) |
 | "Analysis failed" after clicking Analyze | Check that your API key is valid and has quota remaining |
 | Frontend shows "Failed to load questions" | Make sure the backend is running (check terminal for errors) |
-| Railway build fails | Check that `requirements.txt` and `package.json` are committed to git |
-| Railway deploy fails with port error | Add `PORT=8000` environment variable in Railway |
+| Render build fails | Click "Manual Deploy" → check the build logs for the specific error |
+| Site takes 30-60s to load | Normal on the free tier — Render spins down after 15 min idle. Upgrade to Starter ($7/mo) for always-on |
 | Gemini returns errors about model not found | The model name may have changed — check Google AI Studio for current model IDs |
 
 ---
