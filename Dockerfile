@@ -23,8 +23,8 @@ COPY felix_questions.json ./
 # Copy built frontend from stage 1
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
-# Railway sets PORT automatically
-ENV PORT=8000
-EXPOSE 8000
+# Render uses port 10000 by default, but reads $PORT at runtime
+ENV PORT=10000
+EXPOSE 10000
 
 CMD cd backend && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT}

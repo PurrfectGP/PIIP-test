@@ -88,7 +88,7 @@ async def analyze(request: AnalyzeRequest):
 
 @app.get("/api/health")
 def health():
-    """Health check endpoint for Railway."""
+    """Health check endpoint for Render / any hosting platform."""
     return {"status": "ok", "version": "2.1"}
 
 
