@@ -2,7 +2,9 @@
 
 ## What Is This?
 
-Felix is a **psychometric personality engine**. It asks people 28 behavioral questions (like "What do you do when someone cuts in line?"), sends their answers to Google's Gemini AI, and gets back a psychological profile that maps their behavior to the **Seven Deadly Sins** — but not as simple labels. Instead, each behavior is mapped as a **blend** of multiple sins (called "Poly-Sin Vectors").
+Felix is a **psychometric personality engine**. It asks people behavioral questions (like "What do you do when someone cuts in line?"), sends their answers to Google's Gemini AI, and gets back a psychological profile that maps their behavior to the **Seven Deadly Sins** — but not as simple labels. Instead, each behavior is mapped as a **blend** of multiple sins (called "Poly-Sin Vectors").
+
+There are 28 questions split across 6 blocks. Before starting, you choose **how many questions** to pull from each block (0 to all of them). The selected questions are **randomised** every time, so no two sessions feel the same.
 
 **Example:** If someone says *"I steal to feed my family"*, Felix might classify that as:
 - 30% Greed (the act of taking)
@@ -16,6 +18,12 @@ Felix names this pattern `altruistic_theft` and **remembers it forever**. Next t
 ## How It Works (The Big Picture)
 
 ```
+User picks how many questions per block
+        |
+        v
+App randomises and shows that many questions
+        |
+        v
 User answers questions
         |
         v
@@ -36,7 +44,7 @@ Frontend shows results with color-coded bars and highlights new learning
 
 ### The Three Parts
 
-1. **Frontend** (what the user sees) — A React web app with a question form on the left and Felix's "brain" (trait library) on the right. Built with Vite + TailwindCSS.
+1. **Frontend** (what the user sees) — A React web app. First screen: choose how many questions per block. Second screen: questions on the left, Felix's brain on the right. Built with Vite + TailwindCSS.
 
 2. **Backend** (the server) — A Python FastAPI server that handles API requests, talks to Google Gemini, and manages the trait library JSON file.
 
@@ -182,13 +190,28 @@ Change the hex color codes to whatever you want. Use a color picker (search "hex
 cd frontend && npm run build
 ```
 
-### 6. Change the UI Layout / Text
+### 6. Change the Default Number of Questions Per Block
+
+**File:** `frontend/src/App.tsx`
+
+When the app loads, each block defaults to **1 question**. The user can change this on the "Configure Your Session" screen before starting. If you want a different default (e.g., 3 per block), find this line in `App.tsx`:
+
+```typescript
+// Default: 1 question per block
+setCounts(qs.map(() => 1));
+```
+
+Change the `1` to whatever number you want. Setting it to `0` would skip that block by default (the user can still increase it).
+
+### 7. Change the UI Layout / Text
 
 **File:** `frontend/src/App.tsx`
 
 - The header text ("Felix Poly-Sin Lab") is near the top of the `return` section
+- The configure screen title ("Configure Your Session") and description are in the first `return` block
 - Question blocks are rendered as tabs — the tab labels come from `felix_questions.json` block names
 - The "Analyze with Felix" button text is in the button element
+- The "Reconfigure" button in the top-right lets users go back and pick different counts
 
 ---
 
