@@ -1,0 +1,52 @@
+{
+  "questions": {
+    "Block 1: Social & Interpersonal": [
+      {"id": "social_1", "title": "The Group Dinner Check", "question": "The bill arrives at a group dinner. Everyone contributed differently to the total. What's your approach?"},
+      {"id": "social_2", "title": "The Overcrowded Calendar", "question": "You've accidentally double-booked yourself - a close friend's birthday dinner and a work networking event that could advance your career. How do you handle this?"},
+      {"id": "social_3", "title": "The Stranger's Story", "question": "At a party, someone you've just met starts telling you a deeply personal story about their struggles. How do you respond?"},
+      {"id": "social_4", "title": "The Lost Tourist", "question": "You're running late for an important meeting when a confused tourist stops you for directions. What do you do?"},
+      {"id": "social_5", "title": "The Mistaken Stranger", "question": "Someone confidently greets you like an old friend, but you have no idea who they are. How do you handle it?"},
+      {"id": "social_6", "title": "The Salary Discovery", "question": "You accidentally discover that a colleague doing the same job as you earns significantly more. What's your next move?"},
+      {"id": "social_7", "title": "The Generational Advice", "question": "An older family member gives you unsolicited life advice that contradicts your current path. How do you respond?"},
+      {"id": "social_8", "title": "The Religious Event", "question": "A close friend invites you to an important religious ceremony that goes against your personal beliefs. What do you do?"}
+    ],
+    "Block 2: Stress & Problem-Solving": [
+      {"id": "stress_1", "title": "The Technology Meltdown", "question": "Your computer crashes right before a major deadline, and you haven't saved your work in hours. Walk me through your reaction and recovery."},
+      {"id": "stress_2", "title": "The Unexpected Expense", "question": "Your car needs a $1,200 repair you didn't budget for. Walk me through your thought process."},
+      {"id": "stress_3", "title": "The Traffic Jam", "question": "You're stuck in unexpected traffic and will definitely be late to something important. Describe what goes through your mind and what you do."},
+      {"id": "stress_4", "title": "The Street Situation", "question": "Walking home at night, you notice someone has been walking behind you for several blocks. How do you handle this?"}
+    ],
+    "Block 3: Decision-Making & Values": [
+      {"id": "values_1", "title": "The Found Wallet", "question": "You find a wallet with $300 cash in a parking lot. What do you do and why?"},
+      {"id": "values_2", "title": "The Weekend Off", "question": "You have a completely free weekend with no obligations. How do you spend it?"},
+      {"id": "values_3", "title": "The Ethical Dilemma", "question": "You witness a coworker taking credit for someone else's idea in a meeting. The person whose idea it was doesn't seem to notice. What do you do?"}
+    ],
+    "Block 4: Conflict & Disagreement": [
+      {"id": "conflict_1", "title": "The Restaurant Choice", "question": "You're excited about trying a new restaurant, but your date suggests somewhere you've been to multiple times and found mediocre. How do you respond?"},
+      {"id": "conflict_2", "title": "The Customer Service Call", "question": "You've been on hold for 45 minutes about a billing error that's clearly the company's fault. When someone finally answers, how do you handle the conversation?"},
+      {"id": "conflict_3", "title": "The Line Cutter", "question": "Someone clearly cuts in front of you in a long queue. The people behind you notice but say nothing. What do you do?"},
+      {"id": "conflict_4", "title": "The Unequal Split", "question": "You're working on a group project where one person is contributing significantly less than everyone else. How do you handle this?"},
+      {"id": "conflict_5", "title": "The Parenting Philosophy", "question": "You observe a friend parenting in a way that conflicts with your values. Do you say something, and if so, how?"},
+      {"id": "conflict_6", "title": "The Lifestyle Commentary", "question": "A friend is making choices you believe are harmful to their health or wellbeing. How do you approach this, if at all?"}
+    ],
+    "Block 5: Time & Priorities": [
+      {"id": "time_1", "title": "The Spontaneous Trip", "question": "A friend calls Friday afternoon with last-minute tickets to an amazing event this weekend, but you had planned a quiet weekend to recharge. What do you do?"},
+      {"id": "time_2", "title": "The Friend Crisis", "question": "Your best friend calls with an emergency the same night as a planned date you've been looking forward to. What's your thinking process?"},
+      {"id": "time_3", "title": "The Hobby Time", "question": "You finally have time for a hobby you've been neglecting, but a friend asks you to help them move that same day. How do you decide?"},
+      {"id": "time_4", "title": "The Local vs. Chain", "question": "You're choosing between a more expensive local business and a cheaper chain store for a purchase. What factors influence your decision?"}
+    ],
+    "Block 6: Growth & Change": [
+      {"id": "growth_1", "title": "The Learning Opportunity", "question": "You're offered a promotion that requires skills you don't currently have. How do you approach this opportunity?"},
+      {"id": "growth_2", "title": "The Mistake Made", "question": "You realize you've made a significant mistake at work that no one else has noticed yet. What do you do?"},
+      {"id": "growth_3", "title": "The Feedback Received", "question": "Someone you respect gives you critical feedback about a blind spot they've noticed in your behavior. How do you process and respond to this?"}
+    ]
+  },
+  "metadata": {
+    "total_questions": 28,
+    "total_blocks": 6,
+    "min_per_block": 1,
+    "min_words": 25,
+    "max_words": 150,
+    "randomize_within_blocks": true
+  }
+}
