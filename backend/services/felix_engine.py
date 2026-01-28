@@ -121,7 +121,17 @@ class FelixEngine:
             ),
         )
 
-        raw_text = response.text.strip()
+        raw_text = response.text or ""
+        raw_text = raw_text.strip()
+
+        if not raw_text:
+            raise ValueError(
+                "Gemini returned an empty response. This usually means the "
+                "input was blocked by a safety filter, the API key has no quota "
+                "remaining, or the model is unavailable. Try again or shorten "
+                "your answers."
+            )
+
         result = self._parse_json(raw_text)
 
         # If first attempt fails, retry once with a stricter prompt
@@ -139,7 +149,8 @@ class FelixEngine:
                     max_output_tokens=4096,
                 ),
             )
-            result = self._parse_json(retry_resp.text.strip())
+            retry_text = (retry_resp.text or "").strip()
+            result = self._parse_json(retry_text) if retry_text else None
 
         if result is None:
             raise ValueError(
